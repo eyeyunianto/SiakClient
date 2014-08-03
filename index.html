@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>SIA</title>
+  <link rel="stylesheet" href="css/normalize.css">
+  <link rel="stylesheet" href="css/style.css">
+
+  <link rel="stylesheet" href="css/plugin/font-awesome.css">
+  <link rel="stylesheet" href="css/plugin/bootstrap.css">  
+
+  <!-- curl -XPOST "http://192.168.0.101:1337/oauth/token" -d "grant_type=password&client_id=EA9QB1Q6MY&client_secret=cHOKDymJMUkmen7JQRffllf2whFtgX&username=me@gmail.com&password=password" -->
+</head>
+<body>
+  <script>
+    ign.widgetSizeMin('802','700');
+    var fs = ign.filesystem();
+
+    //desktopService()
+    var sys = ign.sys();
+    var jur;
+  </script>
+
+  <script type="text/x-handlebars">
+    {{outlet}}
+    {{outlet modal}}
+  </script>
+
+  <script type="text/x-handlebars" id="components/modal-dialog">
+    <div class="overlay" {{action "close"}}> 
+    </div>
+    <div class="modalDialog">
+      {{yield}}
+    </div>
+  </script>
+
+  <script type="text/x-handlebars" id="signin">
+    <div class="centered" style="width:300px">
+      <form>
+        <div class="input-group">
+          <span class="input-group-addon"><i class="fa fa-user"></i></span>
+          <input type="text" class="form-control" id="username" placeholder="Username">
+        </div>
+        <div class="input-group">
+          <span class="input-group-addon"><i class="fa fa-lock"></i></span>
+          <input type="text" class="form-control" id="password" placeholder="Password">
+        </div>
+        <center>
+        <button type="submit" class="btn btn-default" {{action 'login'}} style="margin-top:20px">Submit</button></center>
+      </form>
+    </div>
+  </script>
+  <script type="text/x-handlebars" id="main">
+  <div style="visibility:hidden" id="modal_click" {{action "openModal" "mymodal"}}></div>
+  <div style="visibility:hidden" id="re_makul" {{action "matakuliah"}}></div>
+  <div style="visibility:hidden" id="krs_back"></div>
+    <div id="main">
+      <div id="sidebar">
+      {{#link-to "mhs"}}<div {{action "mhs"}} class="list-sidebar" id="mhs" style="z-index:2"><i class="fa fa-circle blue"></i>  Mahasiswa</div>{{/link-to}}
+      {{#link-to "dosen"}}<div {{action "dosen"}} class="list-sidebar" id="dosen" style="z-index:2"><i class="fa fa-circle blue"></i>  Dosen</div>{{/link-to}}
+      {{#link-to "jurusan"}}<div {{action "jurusan"}} class="list-sidebar" id="jurusan" style="z-index:2"><i class="fa fa-circle blue"></i>  Jurusan</div>{{/link-to}}
+      {{#link-to "matakuliah"}}<div {{action "matakuliah"}} class="list-sidebar" id="matakuliah" style="z-index:2"><i class="fa fa-circle blue"></i>  Matakuliah</div>{{/link-to}}
+      {{#link-to "krs"}}<div {{action "krs"}} class="list-sidebar" id="krs" style="z-index:2"><i class="fa fa-circle blue"></i>  KRS</div>{{/link-to}}
+      {{#link-to "khs"}}<div {{action "khs"}} class="list-sidebar" id="khs" style="z-index:2"><i class="fa fa-circle blue"></i>  KHS</div>{{/link-to}}
+      {{#link-to "profile"}}<div {{action "profile"}} class="list-sidebar" id="profile" style="z-index:2"><i class="fa fa-circle blue"></i>  Profile</div>{{/link-to}}
+      <div {{action "logout"}} id="logout" style="z-index:2;cursor:pointer"><i class="fa fa-circle blue"></i>  Logout</div>
+      </div>
+      <div class="col-md-12" id="main_layout">
+      
+        <div id="insert">
+          <button type="submit" class="btn btn-default" id="insert" style="margin-top:20px"><i class="fa fa-plus green"></i>  Insert</button>
+        </div>
+        <!--<div id="search">
+        //   <div class="input-group">
+        //     <input type="text" class="form-control">
+        //     <span class="input-group-addon"><i class="fa fa-search"></i></span>
+        //   </div>
+        </div>-->
+      </div>
+      <div class="col-md-12" id="child">
+      <div id="title"></div>
+      {{outlet}}
+      </div>
+    </div>
+  </script>
+  <script type="text/x-handlebars" id="mhs">
+    <div class="table-responsive">
+      <table class="table">
+        <thead>
+            <tr>
+                <th class="center">No</th>
+                <th class="center">NIM</th>
+                <th class="center">Nama</th>
+                <th class="center">Jenis Kelamin</th>
+                <th class="center">Jurusan</th>
+                <th class="center">Angkatan</th>
+                <th class="center">Aksi</th>
+            </tr>
+        </thead>
+        <tbody id="mhs_tabel">
+        </tbody>
+      </table>
+    </div>
+  </script>
+  <script type="text/x-handlebars" id="dosen">
+    <div class="table-responsive">
+      <table class="table">
+        <thead>
+            <tr>
+                <th class="center">No</th>
+                <th class="center">NIK</th>
+                <th class="center">Nama</th>
+                <th class="center">Jenis Kelamin</th>
+                <th class="center">Alamat</th>
+                <th class="center">Aksi</th>
+            </tr>
+        </thead>
+        <tbody id="dosen_tabel">
+        </tbody>
+      </table>
+    </div>
+  </script>
+  <script type="text/x-handlebars" id="jurusan">
+    <div class="table-responsive">
+      <table class="table">
+        <thead>
+            <tr>
+                <th class="center">No</th>
+                <th class="center">Kode</th>
+                <th class="center">Jurusan</th>
+                <th class="center">Aksi</th>
+            </tr>
+        </thead>
+        <tbody id="jurusan_tabel">
+        </tbody>
+      </table>
+    </div>
+  </script>
+  <script type="text/x-handlebars" id="matakuliah">
+    <ul class="nav nav-tabs nav-justified" id="matkul_nav" style="border-bottom-color:transparent"></ul>
+    <div class="back"><!--
+      <div class="btn-group">
+        <div type="button" class="cursor" data-toggle="dropdown">Pilih Semester<span class="caret"></span>
+        </div>
+        <ul class="dropdown-menu" role="menu" id="makul_semester">
+          <li class="cursor"><a>Semester 1</a></li>
+          <li class="cursor"><a>Semester 2</a></li>
+          <li class="cursor"><a>Semester 3</a></li>
+          <li class="cursor"><a>Semester 4</a></li>
+        </ul>
+      </div>-->
+      <div id="list_matakuliah">
+        <div class="table-responsive">
+          <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th class="center">No</th>
+                    <th class="center">Kode</th>
+                    <th class="center">Nama</th>
+                    <th class="center">SKS</th>
+                    <th class="center">Semester</th>
+                    <th class="center">Prasyarat</th>
+                    <th class="center">Aksi</th>
+                </tr>
+            </thead>
+            <tbody id="list_makul">
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </script>
+  <script type="text/x-handlebars" id="krs">
+    <div class="table-responsive">
+      <table class="table">
+        <thead>
+          <tr>
+              <th class="center">No</th>
+              <th class="center">NIM</th>
+              <th class="center">Nama</th>
+              <th class="center">Status</th>
+              <th class="center">Aksi</th>
+          </tr>
+        </thead>
+        <tbody id="mhs_tabel">
+        </tbody>
+      </table>
+    </div>
+  </script>
+  <script type="text/x-handlebars" id="det">
+    <div>
+    {{outlet}}
+    </div>
+  </script>
+  <script type="text/x-handlebars" id="detkrs">
+    <div class="" style="border-bottom:1px solid #ddd"><span id="nama"></span> ( <span id="nim"></span> )<span id="smstr" class="right"></span></div>
+    <div><select id="makul">
+    </select><button style="margin-left:20px;" class="btn-group" onclick="add_krs()" id="btn_krs"><i class="fa fa-plus green"></i> Tambah</button></div>
+    <div class="table-responsive">
+      <table class="table">
+        <thead>
+          <tr>
+              <th class="center">No</th>
+              <th class="center">Kode</th>
+              <th class="center">Mata Kuliah</th>
+              <th class="center">SKS</th>
+              <th class="center">Aksi</th>
+          </tr>
+        </thead>
+        <tbody id="krs_tbl">
+        </tbody>
+      </table>
+    </div>
+  </script>
+  <script type="text/x-handlebars" id="khs">
+  </script>
+  <script type="text/x-handlebars" id="profile">
+  </script>
+
+  <script type="text/x-handlebars" id="details">
+    <div id="form_input">
+      <form role="form" class="form-horizontal">
+        <div class="form-group row">
+          <div class="col-sm-8">
+            <label class="col-sm-2 control-label">Nama</label>
+            <div class="col-sm-10"> <input type="text" class="form-control" id="nama"> </div>
+          </div>
+          <div class="col-sm-4">
+            <label class="col-sm-2 control-label">NIM</label>
+            <div class="col-sm-10"> <input type="text" class="form-control" id="nim"> </div>
+          </div>
+          <div class="col-sm-12" style="margin-top:10px;">
+            <label class="col-sm-1 control-label" for="inputSuccess">Alamat</label>
+            <div class="col-sm-10"> <input type="text" class="form-control" id="inputSuccess"> </div>
+          </div>
+        </div>
+      </form>
+    </div>
+  </script>
+
+  <script type="text/x-handlebars" data-template-name="mymodal">
+    {{#modal-dialog}}
+      <div class="header-color-red" style="z-index:2">
+        <div {{action "closeModal"}} class="fa fa-times-circle" style="cursor:pointer;padding-top:3px;font-size:18px;z-index:10;" id="close_pass"></div>
+        <div id="title_modal" class="modal-title" style=""></div>
+      </div>
+      <div class="col-md-12" style="width:100%;height:100%">
+        <div id="modal_content"> 
+        </div>
+      </div>
+    {{/modal-dialog}}
+  </script>
+
+  <script src="js/libs/jquery-1.10.2.js"></script>
+  <script src="js/libs/handlebars-1.1.2.js"></script>
+  <script src="js/libs/ember-1.5.1.js"></script>
+  <script src="js/app.js"></script>
+  <script src="js/libs/ember-oauth2.js"></script>
+
+  <script src="js/plugin.js"></script>
+  <script src="js/main.js"></script>
+  <script src="js/jurusan.js"></script>
+  <script src="js/dosen.js"></script>
+  <script src="js/mahasiswa.js"></script>
+  <script src="js/krs.js"></script>
+  <script src="js/khs.js"></script>
+  <script src="js/matakuliah.js"></script>
+  <!-- to activate the test runner, add the "?test" query string parameter -->
+  <script src="tests/runner.js"></script>
+
+  <script src="js/libs/bootstrap.js"></script>
+
+
+</body>
+</html>
