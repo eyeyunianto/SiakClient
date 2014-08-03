@@ -92,7 +92,7 @@ function remove_krs(nim){
 	});
 }
 
-var makul_tawar;
+var makul_tawar,_krs;
 function det_krs(nim,jurusan){
 	$('#krs_back').attr('onclick','det_krs("'+nim+'","'+jurusan+'")');
 	
@@ -100,6 +100,7 @@ function det_krs(nim,jurusan){
 	$('#title').html('Detail Kartu Rencana Study');
 	var data_req ={'access_token':App.access_token}
 	var mhs = new majax('krs/'+nim,data_req,'');
+	list_dosen();
 	setTimeout(function(){
 		$('#btn_krs').attr('onclick','add_krs(\''+nim+'\')');
 	},500)
@@ -108,6 +109,7 @@ function det_krs(nim,jurusan){
 		alert(data.responseText)
 	}),
 	mhs.success(function(data){
+		_krs=data;
 		var list='';
 		var nim = data.nim;
 		var nama = data.nama;
@@ -124,7 +126,6 @@ function det_krs(nim,jurusan){
 		n=1
 		if(krs){
 			krs.forEach(function(item) {
-				console.log(item)
 				var id= item.id;
 				var kode = item.kode;
 				var nama = item.nama;
@@ -159,6 +160,7 @@ function list_makul_krs(kd,smstr){
 		alert(data.responseText)
 	}),
 	mhs.success(function(data){
+		
 		var i= data[0].makul.length;
 		var makul = data[0].makul;
 		if(i>0){
@@ -167,7 +169,6 @@ function list_makul_krs(kd,smstr){
 				var kode = item.kode;
 				var nama = item.nama;
 				var sks = item.sks;
-				console.log(kode)
 				list+='<option value="'+kode+'_'+nama+'_'+sks+'">'+kode+'_'+nama+'</option>'
 			})
 			$('#makul').html(list)
@@ -176,6 +177,7 @@ function list_makul_krs(kd,smstr){
 		}
 	})
 }
+
 function add_krs(nim){
 	var e = document.getElementById("makul");
 	var data = e.options[e.selectedIndex].value.split('_');
@@ -184,7 +186,18 @@ function add_krs(nim){
 	var sks = data[2];
 	var data_req ={'access_token':App.access_token,'nama':nama,'kode':kode,'sks':sks }
 	var mhs = new majax_put('krs/'+nim,data_req,'');
-	console.log(mhs)
+	mhs.error(function(data){
+		alert(data.responseText);
+	}),
+	mhs.success(function(data){
+		_krs=data[0];
+		$('#krs_back').click();
+	});
+}
+
+function del_krs(nim,kode){
+	var data_req ={'access_token':App.access_token,'action':'edit','kode':kode}
+	var mhs = new majax_put('krs/'+nim,data_req,'');
 	mhs.error(function(data){
 		alert(data.responseText);
 	}),
@@ -193,14 +206,28 @@ function add_krs(nim){
 	});
 }
 
-function del_krs(nim,kode){
-	var data_req ={'access_token':App.access_token,'action':'edit','kode':kode}
-	var mhs = new majax_put('krs/'+nim,data_req,'');
-	console.log(mhs)
+function list_dosen(){
+	var data_req ={'access_token':App.access_token}
+	var mhs = new majax('dosen',data_req,'');
 	mhs.error(function(data){
-		alert(data.responseText);
+		alert(data.responseText)
 	}),
 	mhs.success(function(data){
-		$('#krs_back').click();
-	});
+		var list='';
+		n=1
+		data.forEach(function(item) {
+			//console.log(item)
+			var nik = item.nik;
+			var nama = item.nama;
+			var alamat = item.alamat;
+            var jk = item.jk;
+            list+='<option value="'+nama+'">'+nama+'</option>'
+            n++
+		})
+		$('#list_dosen').html(list)
+	})
+}
+
+function save_krs(){
+	create_khs();
 }
