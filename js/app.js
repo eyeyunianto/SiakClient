@@ -9,7 +9,7 @@ App.base_url="http://127.0.0.1:1337/";
 App.client_id="EA9QB1Q6MY";
 App.client_secret="cHOKDymJMUkmen7JQRffllf2whFtgX";
 App.refresh_token;
-App.access_token='SG21dUzE3uw45Fj9eWvbsIDxtH0mnp8kw5dhE0hMHyL7Xm8TponkrOYM2qoBHarhGobFH4tzCEoTQabjIIZoaMX66rC5TZ0cePxna8K1hXkPdfJAiM1YaHRm7mOG0dFRbaeqUNRk5X1VZZKSULq6RyvxlQH0hi1bQULOFjU3kM3o9FIojkg5fnUSdMCgufkrqsdtlq5rHXajrApCU5i3CkuejmLjMqSQdEDRZfikmRWUXw5Tm4PU8MD8M28dQy4M';
+//App.access_token='SG21dUzE3uw45Fj9eWvbsIDxtH0mnp8kw5dhE0hMHyL7Xm8TponkrOYM2qoBHarhGobFH4tzCEoTQabjIIZoaMX66rC5TZ0cePxna8K1hXkPdfJAiM1YaHRm7mOG0dFRbaeqUNRk5X1VZZKSULq6RyvxlQH0hi1bQULOFjU3kM3o9FIojkg5fnUSdMCgufkrqsdtlq5rHXajrApCU5i3CkuejmLjMqSQdEDRZfikmRWUXw5Tm4PU8MD8M28dQy4M';
 //App.access_token='5lYyfrXgkjSffIA6GsnzmS8pIzX06t0rdgdRzNZwt3E7I1TeS0Ma5ZGCtGTbKAeRzuW4SzBF1ic6tMKR5SzbUQaBYu94PLRDuk4X6R8LiTVPzAGxoEwshrc2ZDRddaUIxws15aD2r7D5azm3G1oFp2B92Zxe1d7nC2W9EjmU5xhVimurpiCPOVYYliIfTI7PHrY6xuIaFtEuK1Tzts7T5PV6IfZYhrKAHSjVCGu5EN78Zyy406q0GFIZLhjSdcR7';
 App.Router.map(function(){
 	this.resource('signin');
@@ -20,9 +20,9 @@ App.Router.map(function(){
 		this.resource('matakuliah');
 		this.resource('krs');
 		this.resource('khs');
-		this.resource('nilai');
 		this.resource('profile');
         this.resource('det',function(){
+            this.resource('nilai', { path: '/nilai/:nim' });
             this.resource('detkrs', { path: '/detkrs/:nim' });
             this.resource('detkhs', { path: '/detkhs/:nim' });
         });
@@ -43,7 +43,7 @@ App.ApplicationRoute = Ember.Route.extend({
 				App.access_token = data.access_token;
 				App.refresh_token = data.refresh_token;
 				window.location.href="index.html#/main"
-				if($('#username').val()=="me@gmail.com"){
+				if($('#username').val()=="admin@gmail.com"){
 					load_admin();
 				}else{
 					load_user();
@@ -193,6 +193,19 @@ App.ApplicationRoute = Ember.Route.extend({
             }else{
                 list_krs();
             }
+        },
+        khs:function(){
+            if(App.user){
+                det_khs();
+            }else{
+                list_khs();
+            }
+        },
+        logout:function(){
+            App.refresh_token =undefined;
+            App.access_token =undefined;
+            App.user =undefined;
+            window.location.href="index.html#/signin";
         },
         cleared:function(action){
             clear(action);

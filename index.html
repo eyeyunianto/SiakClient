@@ -62,7 +62,7 @@
       {{#link-to "matakuliah"}}<div {{action "matakuliah"}} class="list-sidebar" id="matakuliah" style="z-index:2"><i class="fa fa-circle blue"></i>  Matakuliah</div>{{/link-to}}
       {{#link-to "krs"}}<div {{action "krs"}} class="list-sidebar" id="krs" style="z-index:2"><i class="fa fa-circle blue"></i>  KRS</div>{{/link-to}}
       {{#link-to "khs"}}<div {{action "khs"}} class="list-sidebar" id="khs" style="z-index:2"><i class="fa fa-circle blue"></i>  KHS</div>{{/link-to}}
-      {{#link-to "profile"}}<div {{action "profile"}} class="list-sidebar" id="profile" style="z-index:2"><i class="fa fa-circle blue"></i>  Profile</div>{{/link-to}}
+      <div class="cursor list-sidebar" id="nilai" style="z-index:2" onclick="cat_nilai()"><i class="fa fa-circle blue"></i>  Nilai</div>
       <div {{action "logout"}} id="logout" style="z-index:2;cursor:pointer"><i class="fa fa-circle blue"></i>  Logout</div>
       </div>
       <div class="col-md-12" id="main_layout">
@@ -212,13 +212,64 @@
       </table>
     </div>
     <div>
-      <select id="list_dosen"></select>
+      Dosen Pembimbing : <select id="list_dosen"></select>
       <button style="margin-left:20px;" class="btn-group" onclick="save_krs()" id="btn_krs_simpan"> Simpan dan Cetak</button>
     </div>
   </script>
   <script type="text/x-handlebars" id="khs">
+    <div class="table-responsive">
+      <table class="table">
+        <thead>
+          <tr>
+              <th class="center">No</th>
+              <th class="center">NIM</th>
+              <th class="center">Nama</th>
+              <th class="center">Semester</th>
+              <th class="center">Aksi</th>
+          </tr>
+        </thead>
+        <tbody id="khs_tabel">
+        </tbody>
+      </table>
+    </div>
+  </script>
+  <script type="text/x-handlebars" id="detkhs">
+    <div class="" style="border-bottom:1px solid #ddd"><span id="nama"></span> ( <span id="nim"></span> )<span id="smstr" class="right"></span></div>
+    <div style="float:right;margin-right:10px;"><select id="smstr_"></select></div>
+    <div class="table-responsive">
+      <table class="table">
+        <thead>
+          <tr>
+              <th class="center">No</th>
+              <th class="center">Kode</th>
+              <th class="center">Mata Kuliah</th>
+              <th class="center">SKS</th>
+              <th class="center">Nilai</th>
+              <th class="center">Bobot</th>
+          </tr>
+        </thead>
+        <tbody id="khs_tbl">
+        </tbody>
+      </table>
+    </div>
   </script>
   <script type="text/x-handlebars" id="profile">
+  </script>
+  <script type="text/x-handlebars" id="nilai">
+    <div class="table-responsive">
+      <table class="table">
+        <thead>
+          <tr>
+              <th class="center">No</th>
+              <th class="center">NIM</th>
+              <th class="center">Nama</th>
+              <th class="center">Nilai</th>
+          </tr>
+        </thead>
+        <tbody id="tbl_nilai">
+        </tbody>
+      </table>
+    </div>
   </script>
 
   <script type="text/x-handlebars" id="details">
@@ -269,6 +320,7 @@
   <script src="js/krs.js"></script>
   <script src="js/khs.js"></script>
   <script src="js/matakuliah.js"></script>
+  <script src="js/nilai.js"></script>
   <!-- to activate the test runner, add the "?test" query string parameter -->
   <script src="tests/runner.js"></script>
 
